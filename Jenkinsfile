@@ -24,11 +24,5 @@ pipeline {
                 bat 'docker build -t web-flux-demo:%BUILD_NUMBER% .'
             }
         }
-
-        stage('Deploy Pod to Kubernetes') {
-            steps {
-                bat 'kubectl run web-flux-demo-pod --image=web-flux-demo:%BUILD_NUMBER% --port=8088'
-            }
-        }
     }
 }
