@@ -15,11 +15,10 @@ pipeline {
             }
         }
 
-        stage('Deploy Pod') {
+        stage('Deploy to Kubernetes') {
             steps {
-                bat "kubectl set image deployment/web-flux-deployment web-flux-container=web-flux-demo:15"
+                bat "kubectl set image deployment/web-flux-deployment web-flux-container=web-flux-demo:%BUILD_NUMBER%"
             }
         }
-
     }
 }
