@@ -1,0 +1,18 @@
+version: "3.9"
+
+services:
+  webflux-app:
+    build: .
+    container_name: webflux-demo
+    ports:
+      - "8084:8084"
+    volumes:
+      - myvolume:/data
+    networks:
+      - microservices-net
+
+networks:
+  microservices-net:
+
+volumes:
+  myvolume:
