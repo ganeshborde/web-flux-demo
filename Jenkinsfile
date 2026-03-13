@@ -29,7 +29,7 @@ pipeline {
 
         stage('Deploy Pod') {
             steps {
-                bat 'kubectl run web-flux-demo-pod --image=web-flux-demo:%BUILD_NUMBER% --port=8088 --image-pull-policy=Never'
+                bat 'kubectl apply -f web-flux-pod.yaml'
             }
         }
     }
