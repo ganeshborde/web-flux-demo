@@ -13,11 +13,9 @@ pipeline {
             }
         }
 
-        stage('Clean Old Docker Images') {
+        stage('Cleanup Docker') {
             steps {
-                bat '''
-                for /f "tokens=*" %%i in ('docker images -q web-flux-demo') do docker rmi -f %%i
-                '''
+                bat 'docker image prune -f'
             }
         }
 
