@@ -1,23 +1,11 @@
 pipeline {
     agent any
 
-    triggers {
-        pollSCM('H/1 * * * *')
-    }
-
     stages {
 
         stage('Build Maven') {
             steps {
                 bat 'mvn clean package'
-            }
-        }
-
-        stage('Delete Old Docker Images') {
-            steps {
-                bat '''
-                for /f "tokens=*" %%i in ('docker images -q web-flux-demo') do docker rmi -f %%i
-                '''
             }
         }
 
@@ -29,8 +17,9 @@ pipeline {
 
         stage('Deploy Pod') {
             steps {
-                bat 'kubectl apply -f web-flux-pod.yaml'
+                bat "kubectl set image pod/web-flux-demo-pod web-flux-container=web-flux-demo:%BUILD_NUMBER%"
             }
         }
+
     }
 }
