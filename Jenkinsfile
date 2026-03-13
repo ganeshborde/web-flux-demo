@@ -26,5 +26,11 @@ pipeline {
                 bat 'docker build -t web-flux-demo:%BUILD_NUMBER% .'
             }
         }
+
+        stage('Deploy Pod') {
+            steps {
+                bat 'kubectl apply -f pod.yaml'
+            }
+        }
     }
 }
