@@ -17,7 +17,7 @@ pipeline {
 
         stage('Deploy Pod') {
             steps {
-                bat "kubectl set image pod/web-flux-demo-pod web-flux-container=web-flux-demo:%BUILD_NUMBER%"
+                bat "kubectl set image deployment/web-flux-deployment web-flux-container=web-flux-demo:15"
             }
         }
 
