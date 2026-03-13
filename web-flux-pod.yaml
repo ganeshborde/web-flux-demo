@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: web-flux-demo-pod
+  labels:
+    app: webflux
+spec:
+  containers:
+  - name: web-flux-container
+    image: web-flux-demo:latest
+    imagePullPolicy: Never
+    ports:
+      - containerPort: 8088
