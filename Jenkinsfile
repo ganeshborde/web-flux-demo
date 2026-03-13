@@ -16,9 +16,7 @@ pipeline {
         stage('Clean Old Docker Images') {
             steps {
                 bat '''
-                docker images -q web-flux-demo > images.txt
-                for /f %%%%i in (images.txt) do docker rmi -f %%%%i
-                del images.txt
+                for /f "tokens=*" %%i in ('docker images -q web-flux-demo') do docker rmi -f %%i
                 '''
             }
         }
