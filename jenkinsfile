@@ -17,7 +17,7 @@ pipeline {
             steps {
                 bat '''
                 docker images -q web-flux-demo > images.txt
-                for /f %%i in (images.txt) do docker rmi -f %%i
+                for /f %%%%i in (images.txt) do docker rmi -f %%%%i
                 del images.txt
                 '''
             }
