@@ -7,13 +7,14 @@ pipeline {
         DEPLOYMENT_NAME = "web-flux-deployment"
         CONTAINER_NAME  = "web-flux-container"
         K8S_NAMESPACE   = "default" // change if using another namespace
+        DOCKER_CREDENTIALS_ID = "docker-hub-credentials" // your Jenkins credential ID
     }
 
     stages {
 
         stage('Build Maven') {
             steps {
-                bat 'mvn clean package -DskipTests' // skip tests optionally for faster build
+                bat 'mvn clean package -DskipTests'
             }
         }
 
@@ -28,11 +29,13 @@ pipeline {
         stage('Push Docker Image') {
             steps {
                 script {
-                    // If using local Docker Desktop, push is optional
-                    // For remote registry, uncomment below and configure registry login
-                    // bat "docker tag %IMAGE_NAME%:%IMAGE_TAG% myregistry.com/%IMAGE_NAME%:%IMAGE_TAG%"
-                    // bat "docker push myregistry.com/%IMAGE_NAME%:%IMAGE_TAG%"
-                    echo "Image built: %IMAGE_NAME%:%IMAGE_TAG%"
+                    // Use Jenkins credentials for Docker login
+                    withCredentials([usernamePassword(credentialsId: "${DOCKER_CREDENTIALS_ID}", usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                        bat 'docker login -u %DOCKER_USER% -p %DOCKER_PASS%'
+                        bat "docker tag %IMAGE_NAME%:%IMAGE_TAG% %DOCKER_USER%/%IMAGE_NAME%:%IMAGE_TAG%"
+                        bat "docker push %DOCKER_USER%/%IMAGE_NAME%:%IMAGE_TAG%"
+                        bat 'docker logout'
+                    }
                 }
             }
         }
@@ -41,9 +44,7 @@ pipeline {
             steps {
                 script {
                     // Update deployment image in Kubernetes
-                    bat "kubectl set image deployment/%DEPLOYMENT_NAME% %CONTAINER_NAME%=%IMAGE_NAME%:%IMAGE_TAG% -n %K8S_NAMESPACE%"
-
-                    // Optional: rollout status to wait for deployment completion
+                    bat "kubectl set image deployment/%DEPLOYMENT_NAME% %CONTAINER_NAME%=%DOCKER_USER%/%IMAGE_NAME%:%IMAGE_TAG% -n %K8S_NAMESPACE%"
                     bat "kubectl rollout status deployment/%DEPLOYMENT_NAME% -n %K8S_NAMESPACE%"
                 }
             }
