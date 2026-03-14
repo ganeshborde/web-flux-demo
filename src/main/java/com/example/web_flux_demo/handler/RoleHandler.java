@@ -35,6 +35,7 @@ public class RoleHandler {
 
 	// GET ALL
 	public Mono<ServerResponse> getAllRoles(ServerRequest request) {
+		System.out.println("Fetching all roles...Jay Shree Ram");
 		return ServerResponse.ok().contentType(MediaType.APPLICATION_JSON).body(repository.findAll(), Role.class);
 	}
 

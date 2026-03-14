@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-flux-deployment
+  labels:
+    app: webflux
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: webflux
+  template:
+    metadata:
+      labels:
+        app: webflux
+    spec:
+      containers:
+      - name: web-flux-container
+        image: ganeshrkborde/web-flux-demo:1     # initial placeholder tag
+        imagePullPolicy: Always                  # ensures Kubernetes pulls the new image
+        ports:
+        - containerPort: 8084

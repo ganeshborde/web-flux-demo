@@ -7,7 +7,7 @@ metadata:
 spec:
   containers:
   - name: web-flux-container
-    image: web-flux-demo:latest
+    image: web-flux-demo:14
     imagePullPolicy: Never
     ports:
       - containerPort: 8088
